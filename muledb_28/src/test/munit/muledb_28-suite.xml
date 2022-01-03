@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="muledb_28-suite.xml" />
+	<munit:test name="muledb_28Flow5-test-sucessful" doc:id="542e2e06-a252-45ae-b98e-435e2e576ab8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="348cc54d-3a46-414b-9b5a-402c25ed2967" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9997d9b3-bd69-456d-81e6-5c71fadb2f77" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://muledb28Flow5testsucessful\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="af413cef-0fc7-4217-8a32-110a99240141" >
+				<munit:payload value="#[readUrl('classpath://muledb28Flow5testsucessful\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://muledb28Flow5testsucessful\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to muledb_28Flow5" doc:id="73865f89-004f-4b9c-8825-051b401cbcab" name="muledb_28Flow5"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="4414704a-3cde-42b8-a7c8-c01a695c286c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import muledb28Flow5testsucessful::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

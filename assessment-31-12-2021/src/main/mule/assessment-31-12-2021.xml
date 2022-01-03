@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2ae039f1-06cc-4867-9c41-9c6203650b65" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<configuration doc:name="Configuration" doc:id="d1767d14-ced0-4c97-b2a5-cebaf759f853" defaultErrorHandler-ref="assessment-31-12-2021Error_Handler" />
+	<flow name="assessment-31-12-2021Flow1" doc:id="71313e49-d842-434e-af8c-50834376c897" >
+		<http:listener doc:name="Listener" doc:id="ce852f2c-248f-413f-9618-7a70c90cf0ef" config-ref="HTTP_Listener_config" path="/muleassessment3"/>
+		<choice doc:name="Choice" doc:id="2cbb6fac-dc14-4ca5-89eb-f9e9230cc1a4" >
+			<when expression="#[isEmpty(payload)]">
+				<raise-error doc:name="Raise error" doc:id="a8ad28ce-4013-4e87-b960-f678fd8e67cd" type="NO:PAYLOAD" description="there is no payload"/>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message" doc:id="a5626bbc-a922-4f5f-93a8-15330947e905" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<error-handler name="assessment-31-12-2021Error_Handler" doc:id="2bd95a9a-e0cd-4264-bfb7-fe59b6b8eca6" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d22f42be-b828-4d1c-bc37-0c21b8ba49df" >
+			<ee:transform doc:name="Transform Message" doc:id="5e92903d-aab5-4d61-ad5d-0d7aa902baaf" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"result":"there is no payload"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	<flow name="assessment-31-12-2021Flow" doc:id="b7840860-1e3f-4634-a160-e9c38775939e" >
+		<http:listener doc:name="Listener" doc:id="b100b5bf-2b87-4737-a43c-2d48094917bf" config-ref="HTTP_Listener_config" path="/mule3subflow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="f813fa54-22a4-468c-9183-28f0edcd6229" name="assessment-31-12-2021Flow2"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="cb6adb08-b032-47c4-988c-fdf55908d943" />
+	</flow>
+	<flow name="assessment-31-12-2021Flow2" doc:id="b1e3f141-608a-4837-9b04-bdb9c8475fb3" >
+		<http:request method="GET" doc:name="Request" doc:id="3b92a9ec-d1e3-4a3e-94e6-586a63f1c06c" url="asghutrrrrrrrrrrr"/>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d4500f38-d1eb-4968-ac44-6f6cd46dd7b4" type="HTTP:CONNECTIVITY">
+				<set-payload value='#["this is on error propagate sub flow"]' doc:name="Set Payload" doc:id="d2d43bc4-f540-426d-a075-be023cbf36e3" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

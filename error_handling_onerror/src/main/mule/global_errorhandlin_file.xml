@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<configuration doc:name="Configuration" doc:id="1196aa3b-8ebc-41b3-b411-69f765fe0470" defaultErrorHandler-ref="Copy_of_error_handling_onerrorError_Handler" />
+	<error-handler name="Copy_of_error_handling_onerrorError_Handler" doc:id="12eba0b0-912a-44f2-bacf-ecdb43bd27d4" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="Copy_of_On Error Continue" doc:id="1f309347-d624-4f55-8951-b67cbe960a18" type="ANY" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="bbb43cc7-1db1-40c7-8f29-774718286419" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"response":"this is on error continue"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="Copy_of_On Error Continue" doc:id="59378eba-e890-4750-9c92-8877a6a8c385" type="ANY" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="a22119a7-aa9d-4600-a8b1-110fc8afb40c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"sum":"the range is to long"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-continue>
+	</error-handler>
+</mule>

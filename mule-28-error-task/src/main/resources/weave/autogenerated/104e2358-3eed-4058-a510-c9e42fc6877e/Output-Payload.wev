@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_104e2358_3eed_4058_a510_c9e42fc6877e_Output_Payload = {| result: String |}
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f4ceb611-2c70-41c9-bf1f-80438c1e552c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mule27Flow" doc:id="dfae9633-b845-4fd5-bd91-d0b18d767c80" >
+		<http:listener doc:name="Listener" doc:id="bc1ea602-6806-4183-b36a-bb00894b6bfb" config-ref="HTTP_Listener_config" path="/path"/>
+		<ee:transform doc:name="Transform Message" doc:id="827b7ee8-f823-4b8b-b7d3-526f31619355">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+  payload filter $.firstName=="peter" map ((item, index) -> {
+    "First name" : item.firstName,
+    "index" : index
+})
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule27Flow1" doc:id="ebd93274-dcb3-4cb3-bdf5-10592a508dac" >
+		<http:listener doc:name="Listener" doc:id="12028619-0142-49b3-8838-167528da5088" config-ref="HTTP_Listener_config" path="/groupby"/>
+		<ee:transform doc:name="Transform Message" doc:id="3ece02c7-3f1e-4d4a-a913-e077d3d01093" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload groupBy $.acc_type	
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

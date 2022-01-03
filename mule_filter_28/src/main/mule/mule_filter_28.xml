@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="63258d49-addb-46ac-a8dc-f3a38424c0bf" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mule_filter_28Flow" doc:id="78d69027-607b-42e3-a115-4cb861dd8284" >
+		<http:listener doc:name="Listener" doc:id="87d793b8-52d7-4bbd-af36-5792eae05d6f" config-ref="HTTP_Listener_config" path="/mulefilter"/>
+		<ee:transform doc:name="Transform Message" doc:id="428106be-cb85-4d3c-85dd-e1de14a9abd7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter $.firstName == "peter" map ((item,index)->
+{
+	"firstName":item.FIrstName
+}	
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule_filter_28Flow1" doc:id="6fe9e75b-df79-487b-94e0-3f285fa68ec5" >
+		<http:listener doc:name="Listener" doc:id="af6c737d-a5e3-429b-9381-da6c03cb828b" config-ref="HTTP_Listener_config" path="/mulegroupby"/>
+		<ee:transform doc:name="Transform Message" doc:id="0fe3f912-2091-4727-bc07-b778514f9a2f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload groupBy $.acc_type
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule_filter_28Flow3" doc:id="86da27b9-095b-4d31-a8bb-516e6c3b3823" >
+		<http:listener doc:name="Listener" doc:id="2a25f70e-3cf2-4772-a840-12836310a353" config-ref="HTTP_Listener_config" path="/mulemapobj"/>
+		<ee:transform doc:name="Transform Message" doc:id="f440f062-1de0-4eb1-86dc-1f56d13ecb92" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload mapObject (value,key,index)-> {
+	(upper(key)): value
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule_filter_28Flow2" doc:id="db127517-0dd7-49d3-9a7b-5126eb082c8e" >
+		<http:listener doc:name="Listener" doc:id="b0941652-b21b-49aa-ade3-5b69df3f41ed" config-ref="HTTP_Listener_config" path="/"/>
+		<ee:transform doc:name="Transform Message" doc:id="f89358cd-f93f-4dce-a159-cebade5ea07f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule_filter_28Flow4" doc:id="cec9d294-988d-417d-b8ea-a43419d6684e" >
+		<http:listener doc:name="Listener" doc:id="cfdbaea0-91e5-45a6-b75b-d44414082212" config-ref="HTTP_Listener_config" path="/prices"/>
+		<ee:transform doc:name="Transform Message" doc:id="a1b70b5a-2fb1-431e-bd50-5774b0bbe235" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+prices:payload.prices mapObject (value,key)->{
+	(key):(value+5) as Number {format:"##.00"}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

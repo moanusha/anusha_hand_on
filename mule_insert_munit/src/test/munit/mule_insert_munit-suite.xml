@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mule_insert_munit-suite.xml" />
+	<munit:test name="mule_insert_munitFlow-sucessful" doc:id="d520458f-f227-46c9-9bbd-9f7ab31b2238" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="5094f3e3-90d2-46a7-9063-d8abe26569f0" >
+				<munit:payload value="#[readUrl('classpath://muleinsertmunitFlowsucessful\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://muleinsertmunitFlowsucessful\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mule_insert_munitFlow" doc:id="3d8cead3-c2d9-4648-bb0c-0cc1b155a629" name="mule_insert_munitFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3ad1d075-7955-437f-86d2-9eaa826d51d1" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import muleinsertmunitFlowsucessful::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule_insert_munitFlow-sucessful1" doc:id="52c517e9-13cc-4519-9ea1-8789085e9c5e" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="f771c3ff-e161-440e-8b3b-2c4aca8e1089" >
+				<munit:payload value="#[readUrl('classpath://muleinsertmunitFlowsucessful1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://muleinsertmunitFlowsucessful1\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mule_insert_munitFlow" doc:id="4d745e5a-444a-43b0-b0a2-de80aad4c926" name="mule_insert_munitFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="fae2ac19-d577-41c9-9a5a-2417697673c4" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import muleinsertmunitFlowsucessful1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

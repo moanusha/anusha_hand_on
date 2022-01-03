@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="6e1bb023-6b99-47fd-b71a-9df70bf488ac" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="cd1af3fc-71b0-439d-8e56-03152213038c" >
+		<http:request-connection host="api.github.com/users" />
+	</http:request-config>
+	<flow name="mule28-12-2021-asscessmentFlow" doc:id="4199cd30-2dc3-4bd8-b60c-9391c44d5d7a" >
+		<http:listener doc:name="Listener" doc:id="bab5a3f5-610f-4aa5-af78-624be060031a" config-ref="HTTP_Listener_config" path="/mulerequest"/>
+		<http:request method="GET" doc:name="Request" doc:id="88191866-fe87-4a7b-a55f-80645def4553" config-ref="HTTP_Request_configuration" url="https://api.github.com/users"/>
+		<ee:transform doc:name="Transform Message" doc:id="974478f4-aa9e-449e-a7aa-0edb78183e8c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	   payload map{
+            "login":$.login,
+            "id":$.id
+            
+            }
+        
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

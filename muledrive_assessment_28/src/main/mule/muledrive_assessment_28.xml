@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1317506f-6b30-44fe-8a6e-f9509c7747cc" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="bfa0aae9-3e38-43e9-9f51-02dc9785cb39" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="cust_details" />
+	</db:config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="ee406252-aced-4d4d-8398-4e1e291ad4c7" >
+		<wsc:connection wsdlLocation="http://calculator-webservice.mybluemix.net/calculator?wsdl" service="CalculatorService" port="CalculatorPort" address="http://calculator-webservice.mybluemix.net/calculator" >
+			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+		</wsc:connection>
+	</wsc:config>
+	<flow name="muledrive_assessment_28Flow" doc:id="f4eef5ec-c647-4aa6-9060-343ca84fab3b" >
+		<http:listener doc:name="Listener" doc:id="ab6fb3be-f964-4cbf-9dba-9eb79f726d48" config-ref="HTTP_Listener_config" path="/muledrive"/>
+		<db:select doc:name="Select" doc:id="568377b4-71f6-4d3a-88a8-5b20af66fe60" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from cust_details.customer_details]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="023484ec-7b0c-4bd2-a737-542f86085c7c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="muledrive_assessment_28Flow1" doc:id="d8853b56-5b48-463c-ae71-5fc90bae69dc" >
+		<http:listener doc:name="Listener" doc:id="8dca8c9d-eb38-4f20-bfd6-f5c78205627a" config-ref="HTTP_Listener_config" path="/muledriveinsert"/>
+		<db:insert doc:name="Insert" doc:id="57d2ffd4-1e79-4f2c-8db7-9ac04c6d08c1" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into cust_details.customer_details (customer_id,customer_name,DOB,city,gender)
+values(105,"anudhav",19-05-2021,"bangalore","m")]]></db:sql>
+		</db:insert>
+		<ee:transform doc:name="Transform Message" doc:id="15abe947-287b-435a-94de-7582edee09d7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="muledrive_assessment_28Flow2" doc:id="a24a4840-d989-47e1-acaf-0bd8629f93a8" >
+		<http:listener doc:name="Listener" doc:id="a9bd9d8e-f06e-46f3-95fc-5c36b786a8cc" config-ref="HTTP_Listener_config" path="/muleupdate"/>
+		<db:update doc:name="Update" doc:id="1cb5d724-7cd7-4604-8070-ba16275f9104" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE cust_details.customer_details
+SET customer_Name = 'Amulya', city= 'jaipur'
+WHERE customer_id = 103;]]></db:sql>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="c675fed0-6ea1-480a-95f6-eb2628c4e3ed" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="muledrive_assessment_28Flow3" doc:id="4b510d6a-c66b-4da4-9adc-14ab8a48d865" >
+		<http:listener doc:name="Listener" doc:id="36d2de62-3fa9-4562-8b1e-4365df69ae00" config-ref="HTTP_Listener_config" path="/muledelete"/>
+		<db:delete doc:name="Delete" doc:id="8a66c9a6-039e-48b4-a722-dc6d2c09ff1e" config-ref="Database_Config">
+			<db:sql ><![CDATA[DELETE FROM customers_details WHERE customer_name='anirudh';]]></db:sql>
+		</db:delete>
+		<ee:transform doc:name="Transform Message" doc:id="7b3b09f6-5f3d-41cd-958d-b19242448624" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="muledrive_assessment_28Flow4" doc:id="e8188bc3-b38f-4612-9605-0efb81a711e2" >
+		<http:listener doc:name="Listener" doc:id="0a011c55-69c1-4264-8d85-16a73fb9ecf2" config-ref="HTTP_Listener_config" path="/mulecomsume"/>
+		<ee:transform doc:name="Transform Message" doc:id="ab88649f-b97a-4651-9b50-55473955c5ad" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://example.com/
+---
+{
+	ns0#add: {
+		intA: payload.value1,
+		intB: payload.value2
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="add" doc:name="Consume" doc:id="ad88e87c-987a-4dac-acd9-e15ca8392d8b" config-ref="Web_Service_Consumer_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="bb5a3d4d-672e-4ad8-94bc-fec8852ff150" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0ns ns0 http://example.com/
+
+output application/json
+---
+{
+	"result": payload.body.ns0#addResponse.value
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

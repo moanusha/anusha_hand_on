@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="muledb_28-test-suite.xml" />
+	<munit:test name="muledb_28-test-suite-muledb_28Flow5Test" doc:id="ef684935-f549-4077-8f16-ffa50c42de08" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to muledb_28Flow5" doc:id="15d0a13a-2cb3-42b2-ba5e-acffff498bbf" name="muledb_28Flow5"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

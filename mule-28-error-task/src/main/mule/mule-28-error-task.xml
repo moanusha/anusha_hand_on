@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5f28c643-1134-451e-a2fa-aa857ffa0fae" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mule-28-error-taskFlow" doc:id="fdee7945-b257-4f52-937c-339503ae76c0" >
+		<http:listener doc:name="Listener" doc:id="203c261b-b9ab-4d73-b612-47cbb0980dcd" config-ref="HTTP_Listener_config" path="/error-task"/>
+		<set-payload value='#["this is normal payload"]' doc:name="Set Payload" doc:id="d3c15646-d097-4704-894c-73650f1778cb" />
+		<flow-ref doc:name="Flow Reference" doc:id="b402dadf-9397-44fa-ba0a-8ebed9862b21" name="mule-28-error-taskFlow1"/>
+	</flow>
+	<flow name="mule-28-error-taskFlow1" doc:id="6964dbab-3e6d-4398-bd1d-b0df5dea663a" >
+		<http:request method="GET" doc:name="Request" doc:id="98da70b6-ce4c-4f6a-b6da-c37f022ad9f9" url="asdfgggggghjkwerty"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c83c6a59-005b-4906-b040-77870e2ee4c8" type="HTTP:CONNECTIVITY">
+				<ee:transform doc:name="Transform Message" doc:id="77869154-a75f-49f8-b715-0d082714ec24" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"result": "on error continue"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="mule-28-error-taskFlow2" doc:id="26975150-0c1f-4b6a-83e2-240afd525e83" >
+		<http:listener doc:name="Listener" doc:id="45c36816-90dc-4f60-88b7-4a3fe97cdfbd" config-ref="HTTP_Listener_config" path="/mulepropagate"/>
+		<set-payload value='#["this is propagate error"]' doc:name="Set Payload" doc:id="e0f9b0af-80ec-4876-b9ec-a671f7fb07aa" />
+		<flow-ref doc:name="Flow Reference" doc:id="97f43811-b745-4670-a0e2-db9ce443efc8" name="mule-28-error-taskFlow3"/>
+	</flow>
+	<flow name="mule-28-error-taskFlow3" doc:id="104e2358-3eed-4058-a510-c9e42fc6877e" >
+		<http:request method="GET" doc:name="Request" doc:id="200216db-26a7-4f86-be64-ed0615cf28de" url="zxxxxcvghj"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="75942a26-0c1e-466d-bb4d-b84a66edc837" type="HTTP:CONNECTIVITY">
+				<ee:transform doc:name="Transform Message" doc:id="6cb0169c-a385-4e2f-9d41-f4735e204300" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"result": "on error propragate"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="mule-28-error-taskFlow4" doc:id="117a1085-ebbf-48bc-9e63-ffe462a73dca" >
+		<http:listener doc:name="Listener" doc:id="3cc46636-122f-4ec0-87c0-aa690b7a39c2" config-ref="HTTP_Listener_config" path="/mulecorrect"/>
+		<set-payload value='#["this is correct"]' doc:name="Set Payload" doc:id="f4b9218d-a49a-4bd6-bb7f-93f728d27e21" />
+		<flow-ref doc:name="Flow Reference" doc:id="e50c0b46-8d76-4771-b9ea-8c5d26f2a20d" name="mule-28-error-taskFlow5"/>
+	</flow>
+	<flow name="mule-28-error-taskFlow5" doc:id="edb020e3-128f-444d-97b4-8fc37f8a2765" >
+		<http:request method="GET" doc:name="Request" doc:id="b0196011-4ffe-48bf-a7c7-3ef456b4e10a" url="http://www.saptechnical.com/"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="915e02f7-f730-4c3f-8790-8d4a154ca461" >
+				<ee:transform doc:name="Transform Message" doc:id="4f60a588-add3-4989-992b-ab9e556f598b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"result": "this is on error propragate"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

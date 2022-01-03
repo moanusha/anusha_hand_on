@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="27cdda04-6361-483d-b980-ce0a71d4ece4" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="cae9b69d-a3b7-4757-9fba-4424f1480a0a" >
+		<db:my-sql-connection host="localhost" user="root" password="root" database="learndb" port="3306"/>
+	</db:config>
+	<flow name="mule_insert_munitFlow" doc:id="12a6b50f-5931-450a-9a8f-7f95754fd346" >
+		<http:listener doc:name="Listener" doc:id="05edabdf-602a-4a98-8c8a-77598cf60dd0" config-ref="HTTP_Listener_config" path="/muleinser_munit"/>
+		<db:insert doc:name="Insert" doc:id="76cdac22-3e03-47c0-9d08-2a02edee43c3" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into learndb.acc_no (account_no,name,contact,branch)
+values("115","mondru",1235675985,"Hi-tech")]]></db:sql>
+		</db:insert>
+	</flow>
+</mule>

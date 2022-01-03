@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c6d5e382-83ba-418a-9b94-bc450b625c39" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="errorFlow" doc:id="07ddc900-dcff-479c-9aff-c8b95e1ff5e5" >
+		<http:listener doc:name="Listener" doc:id="582cd503-25d9-4a5d-a0cf-09c427e3d7d7" config-ref="HTTP_Listener_config" path="/muled"/>
+		<raise-error doc:name="Raise error" doc:id="da5880a6-4dfa-408e-8cf8-2fde8e3fbe5a" type="NO:PAYLOAD"/>
+		<set-payload value='#["the payload is after raise error"]' doc:name="Set Payload" doc:id="00f26c90-80ed-4512-ae95-cb401d9556cd" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="47836053-9b4c-4866-81db-46810b8d2c33" >
+				<set-payload doc:name="Set Payload" doc:id="7a920051-b17a-4771-9ff9-fd4057f93e2b" value='"the payload is continue"'/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

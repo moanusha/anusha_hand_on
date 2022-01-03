@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="b8269a3b-6974-4182-8c62-d55668debd9a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mule28-12-2021Flow" doc:id="37601e9f-0964-47b9-b801-41ac3177855f" >
+		<http:listener doc:name="Listener" doc:id="0b5193d2-c008-43c6-8681-0fe632565ddf" config-ref="HTTP_Listener_config" path="/mulegrp"/>
+		<ee:transform doc:name="Transform Message" doc:id="85f27aee-48e3-440b-8d2f-83114ebdf648">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload groupBy $.language
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule28-12-2021Flow1" doc:id="656d5779-0e15-4015-9bbe-779381705b58" >
+		<http:listener doc:name="Listener" doc:id="7369609a-1398-484c-af06-23a64a39f008" config-ref="HTTP_Listener_config" path="/mulelabel"/>
+		<ee:transform doc:name="Transform Message" doc:id="ea02fbc3-fe92-4492-b05d-3b077661f0a1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var myVar = { menu: {
+    header: "Move Items",
+
+    items: [
+
+        {"id": "internal"},
+
+        {"id": "left", "label": "Move Left"},
+
+        {"id": "right", "label": "Move Right"},
+
+        {"id": "up", "label": "Move Up"},
+
+        {"id": "down", "label": "Move Down"}
+        ]}
+        }
+---
+{"my lables":[myVar.menu.items.label]}
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="mule28-12-2021Flow2" doc:id="514df260-f06a-4ed7-ad00-736b41d8732d" >
+		<http:listener doc:name="Listener" doc:id="4949e6c0-75be-4fc3-8c19-e11c2be2c0a9" config-ref="HTTP_Listener_config" path="/"/>
+		<ee:transform doc:name="Transform Message" doc:id="a510f80a-3411-45ad-a8fd-0a4d9bb88da0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
